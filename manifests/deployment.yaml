@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: part-1
-  name: part-1
+    app: part-1-backend
+  name: part-1-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: part-1
+      app: part-1-backend
   strategy: {}
   template:
     metadata:
       labels:
-        app: part-1
+        app: part-1-backend
     spec:
       containers:
       - image: part-1-backend:latest
@@ -49,6 +49,27 @@ spec:
             configMapKeyRef:
               name: part-1
               key: sleep_duration
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: part-1-frontend
+  name: part-1-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: part-1-frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: part-1-frontend
+    spec:
+      containers:
       - image: part-1-frontend:latest
         ports:
           - containerPort: 8050

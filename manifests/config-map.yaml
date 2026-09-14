@@ -4,6 +4,6 @@ metadata:
   name: part-1
 data:
   # property-like keys; each key maps to a simple value
-  backend_url: "http://localhost:8000"
+  backend_url: "http://part-1-backend:8000"
   data_file: "special_names.csv"
   sleep_duration: "10"
