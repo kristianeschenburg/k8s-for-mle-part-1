@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: part-1-backend
+spec:
+  selector:
+    app: part-1
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: part-1-frontend
+spec:
+  selector:
+    app: part-1
+  ports:
+  - port: 8050
+    targetPort: 8050

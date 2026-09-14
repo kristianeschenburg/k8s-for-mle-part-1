@@ -1,0 +1,25 @@
+# GatewayClass: the only implementation-specific piece. It tells Kubernetes which
+# controller (here, Envoy Gateway) is responsible for Gateways of this class.
+# Analogous to the `nginx` IngressClass that ingress-nginx created for you.
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+---
+# Gateway: the actual entry point. Envoy Gateway sees this and creates an Envoy
+# proxy Deployment plus a LoadBalancer Service for it, which MetalLB gives an IP.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: part-1
+spec:
+  gatewayClassName: envoy
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: Same  # only HTTPRoutes in this Gateway's namespace (default) may attach

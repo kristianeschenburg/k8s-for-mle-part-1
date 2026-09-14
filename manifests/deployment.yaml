@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: part-1
+  name: part-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: part-1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: part-1
+    spec:
+      containers:
+      - image: part-1-backend:latest
+        ports:
+          - containerPort: 8000
+        name: backend
+        resources: {}
+        imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 5  # Time to wait before first check
+          periodSeconds: 10       # How often to check
+          timeoutSeconds: 2       # Timeout for response
+          failureThreshold: 3     # Number of failures before restarting
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 5  # Time to wait before first check
+          periodSeconds: 5       # How often to check
+          timeoutSeconds: 2       # Timeout for response
+          failureThreshold: 3     # Number of failures before restarting
+        env:
+        - name: DATA_FILE
+          valueFrom:
+            configMapKeyRef:
+              name: part-1
+              key: data_file
+        - name: SLEEP_DURATION
+          valueFrom:
+            configMapKeyRef:
+              name: part-1
+              key: sleep_duration
+      - image: part-1-frontend:latest
+        ports:
+          - containerPort: 8050
+        name: frontend
+        resources: {}
+        imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8050
+          initialDelaySeconds: 5  # Time to wait before first check
+          periodSeconds: 10       # How often to check
+          timeoutSeconds: 2       # Timeout for response
+          failureThreshold: 3     # Number of failures before restarting
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8050
+          initialDelaySeconds: 5  # Time to wait before first check
+          periodSeconds: 5       # How often to check
+          timeoutSeconds: 2       # Timeout for response
+          failureThreshold: 3     # Number of failures before restarting
+        env:
+        - name: BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: part-1
+              key: backend_url
+status: {}

@@ -1,0 +1,26 @@
+# HTTPRoute: the routing rules, equivalent to the rules in ingress-resource.yaml.
+# It attaches to the Gateway via parentRefs instead of an ingressClassName.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: part-1
+spec:
+  parentRefs:
+  - name: part-1  # the Gateway in gateway.yaml
+  hostnames:
+  - apps.part-1.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /backend
+    backendRefs:
+    - name: part-1-backend
+      port: 8000
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /frontend
+    backendRefs:
+    - name: part-1-frontend
+      port: 8050
